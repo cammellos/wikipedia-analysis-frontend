@@ -12,11 +12,11 @@ import urllib.request
 class Url(models.Model):
 
   class STATE:
-    ERROR = -1
-    NEW = 0
-    DOWNLOADING = 1
-    PROCESSING = 2
-    COMPLETE = 3
+    ERROR = '-1'
+    NEW = '0'
+    DOWNLOADING = '1'
+    PROCESSING = '2'
+    COMPLETE = '3'
 
 
   STATE_CHOICES = (
@@ -37,6 +37,7 @@ class Url(models.Model):
   @transition(field=state, source=STATE.NEW, target=STATE.DOWNLOADING)
   def download_page_history(self): 
     urllib.request.urlretrieve(self.BASE_URL.substitute(name=self.title), filename=string.Template("/tmp/$name.xml").substitute(name=self.title), data=b'none=none')
+    self.save()
       
 
 
