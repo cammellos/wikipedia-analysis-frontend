@@ -5,9 +5,11 @@ import string
 
 
 import urllib.request
+from kombu import Connection,Exchange, Queue, Consumer,eventloop
+from kombu.pools import producers
 
 
-# Create your models here.
+
 
 class Url(models.Model):
 
@@ -15,15 +17,19 @@ class Url(models.Model):
     ERROR = '-1'
     NEW = '0'
     DOWNLOADING = '1'
-    PROCESSING = '2'
-    COMPLETE = '3'
+    DOWNLOADED = '2'
+    PROCESSING = '3'
+    PROCESSED = '4'
+    COMPLETED = '5'
 
 
   STATE_CHOICES = (
     (STATE.NEW,'New','Url'),
     (STATE.DOWNLOADING,'Downloading','Url'),
+    (STATE.DOWNLOADED,'Downloading','Url'),
     (STATE.PROCESSING, 'Processing','Url'),
-    (STATE.COMPLETE, 'Complete','Url'),
+    (STATE.PROCESSED, 'Processing','Url'),
+    (STATE.COMPLETED, 'Complete','Url'),
     (STATE.ERROR,'Failed','Url')
   )
 
@@ -32,13 +38,42 @@ class Url(models.Model):
   title = models.CharField(max_length=100, unique=True)
   state = FSMField(default=STATE.NEW,state_choices=STATE_CHOICES)
 
+  def process(self):
+    with Connection() as conn:
+        wikipedia_exchange = Exchange('wikipedia', type='direct', durable=False)
+        with producers[conn].acquire(block=True) as producer:
+            producer.publish(self.title,
+                             exchange=wikipedia_exchange,
+                             declare=[wikipedia_exchange],
+                             routing_key='jobs')
 
-  @task()
-  @transition(field=state, source=STATE.NEW, target=STATE.DOWNLOADING)
-  def download_page_history(self): 
-    urllib.request.urlretrieve(self.BASE_URL.substitute(name=self.title), filename=string.Template("/tmp/$name.xml").substitute(name=self.title), data=b'none=none')
-    self.save()
-      
+  @transition(field=state, source='*', target=STATE.DOWNLOADING)
+  def downloading(self):
+    pass
+
+  @transition(field=state, source='*', target=STATE.DOWNLOADED)
+  def downloaded(self):
+    pass
+
+  @transition(field=state, source='*', target=STATE.PROCESSING)
+  def processing(self):
+    pass
+
+  @transition(field=state, source='*', target=STATE.PROCESSED)
+  def processed(self):
+    pass
+
+  @transition(field=state, source='*', target=STATE.COMPLETED)
+  def completed(self):
+    pass
+
+  @transition(field=state, source='*', target=STATE.COMPLETED)
+  def failed(self):
+    pass
+
+
+
+
 
 
   
