@@ -28,6 +28,24 @@ body {
 	background:#1f1f1f;
     font-family: 'Open Sans', sans-serif;
 }
+body,html {
+  height: 100%;
+}
+
+#wrap {
+  min-height: 100%;
+  height: auto;
+  margin: 0 auto -120px;
+  padding: 0 0 12px;
+}
+
+#new_url_form {
+  margin-top: 20%;
+}
+#footerwrap {
+  height: 120px;
+  background-color: #f5f5f5;
+}
 
 h1 {
 font-family: 'Raleway', sans-serif;}
@@ -289,7 +307,7 @@ input[type=submit] {
 	background: #b2c831;
 	color: #fff;
 	border: none;
-	padding: 8px 28px 10px 26px;
+	//padding: 8px 28px 10px 26px;
 	  *-webkit-border-radius: 4px;
      -moz-border-radius: 4px;
           border-radius: 4px;
@@ -302,7 +320,7 @@ input[type=text], textarea {
 	width: 100%;
 	border: none;
 	box-shadow: none;
-	height: 30px;
+	//height: 30px;
 	line-height: 18px;
 	padding: 0;
 	text-indent: 18px;
@@ -773,7 +791,6 @@ a:hover {
     background:#262626;
 	background-image:url('../img/sep-half.png');
     padding-top:25px;
-    padding-bottom: 40px;
 	border-top-style: solid;
     border-top-width:8px;
     border-top-color:#1d1d1d;

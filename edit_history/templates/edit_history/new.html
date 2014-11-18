@@ -1,0 +1,14 @@
+{% extends "edit_history/base.html" %}
+{% block content %}
+  <form action="/edit_history/urls" method="post" id='new_url_form'>
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-md-10">
+          {{ form.title }}
+        </div>
+        <div class="col-md-2 text-center">
+          <input class='btn' type="submit" value="Submit" />
+        </div>
+      </div>
+  </form>
+{% endblock %}
