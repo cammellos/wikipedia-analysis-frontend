@@ -11,6 +11,7 @@
     <link href="{% static "assets/css/main.css" %}" rel="stylesheet">
     <link href="{% static "assets/css/font-style.css" %}" rel="stylesheet">
     <link href="{% static "assets/css/flexslider.css" %}" rel="stylesheet">
+    <link href="{% static "assets/css/nprogress.css" %}" rel="stylesheet">
     
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
 
@@ -39,7 +40,8 @@
   <body>
     <div id='wrap'>
       {% include 'edit_history/_header.html' %}
-      <div class="container">
+      <div id='content' class="container">
+        <div class='flash'></div>
         {% block content %}{% endblock %}
       </div> <!-- /container -->
     </div>
@@ -69,5 +71,7 @@
         <script src="{% static "assets/js/jquery.flexslider.js" %}" type="text/javascript"></script>
 
         <script type="text/javascript" src="{% static "assets/js/admin.js" %}"></script>
+        <script type="text/javascript" src="{% static "assets/js/nprogress.js" %}"></script>
+    {% block javascript %}{% endblock %}
   
 </body></html>

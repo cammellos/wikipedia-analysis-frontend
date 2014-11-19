@@ -12,3 +12,8 @@
       </div>
   </form>
 {% endblock %}
+
+{% block javascript %}
+  {% load static %}
+  <script type="text/javascript" src="{% static "assets/js/urls.js" %}"></script>
+{% endblock %}
