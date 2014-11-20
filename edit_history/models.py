@@ -1,7 +1,11 @@
 from django.db import models
 from django_fsm import FSMField, transition
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
 from celery import task
 import string
+import re
 
 
 import urllib.request
@@ -35,8 +39,15 @@ class Url(models.Model):
 
   BASE_URL = string.Template("http://en.wikipedia.org/w/index.php?title=Special:Export&pages=$name%0ATalk:$name&offset=1&action=submit")
 
-  title = models.CharField(max_length=100, unique=True)
+  title = models.CharField(max_length=100)
+  language = models.CharField(max_length=4, default='en')
+  url = models.CharField(max_length=100, unique=True)
   state = FSMField(default=STATE.NEW,state_choices=STATE_CHOICES)
+
+  @receiver(pre_save)
+  def generate_title_and_language(sender, instance, *args, **kwargs):
+    rgx = re.compile(r"^http:\/\/([a-z][a-z])\.wikipedia\.com\/(.*)$")
+    #instance.language, instance.title = rgx.search(instance.url).groups()
 
   def process(self):
     with Connection() as conn:
